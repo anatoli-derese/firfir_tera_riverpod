@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final String baseUrl = "https://2076-213-55-95-177.ngrok-free.app";
+  final String baseUrl = "https://c73d-197-156-107-28.ngrok-free.app";
 
   late SharedPreferences sharedPreferences;
   Future<void> initializeSharedPreferences() async {

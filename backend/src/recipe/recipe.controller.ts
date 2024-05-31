@@ -68,7 +68,7 @@ export class RecipeController {
       file.path,
     );
 
-    const serverBaseURL = 'https://2076-213-55-95-177.ngrok-free.app/uploads/';
+    const serverBaseURL = 'https://c73d-197-156-107-28.ngrok-free.app/uploads/';
     const filePath = `${serverBaseURL}${file.filename}`;
     const createdRecipe = await this.recipeService.insertRecipe(
       {

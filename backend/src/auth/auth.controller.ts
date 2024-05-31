@@ -35,7 +35,7 @@ export class AuthController {
   ): Promise<{ token: string }> {
     this.uploadService.uploadFile(file);
 
-    const serverBaseURL = 'https://2076-213-55-95-177.ngrok-free.app/uploads/';
+    const serverBaseURL = 'https://c73d-197-156-107-28.ngrok-free.app';
     const filePath = `${serverBaseURL}${file.filename}`;
 
     var role1 = [];
