@@ -9,8 +9,8 @@ class MockCommentService extends Mock implements CommentService {
   @override
   Future<void> addComment(Comment comment) async {}
 
-  @override
-  Future<void> deleteComment(String commentId) async {}
+  // @override
+  // Future<void> deleteComment(String commentId) async {}
 
   @override
   Future<List<Comment>> fetchComments(String recipeId) async {
