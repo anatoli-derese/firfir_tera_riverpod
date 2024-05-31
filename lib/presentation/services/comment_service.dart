@@ -1,29 +1,29 @@
+// import 'dart:js';
+
 import 'package:firfir_tera/models/Comment.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import "dart:convert";
+import 'package:flutter/material.dart';
 
 class CommentService {
-  final String url = 'https://289d-213-55-95-222.ngrok-free.app';
+  final String url = 'https://2076-213-55-95-177.ngrok-free.app';
 
   Future<List<Comment>> fetchComments(String recipeId) async {
-    // return [
-    //   Comment(id: '1', recipeId: recipeId, userId: 'user1', comment: 'Great recipe!'),
-    //   Comment(id:'2', recipeId: recipeId, userId: 'user2', comment: 'Loved it!'),
-    // ];
-
     final response = await http.get(Uri.parse('$url/comments/${recipeId}'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
-      print(data);
+
       return data.map((item) => Comment.fromJson(item)).toList();
     } else {
-      throw Exception('Failed to load comments');
+      SnackBar(content: Text("Unable to fetch comments, pls try again later"));
+      throw Exception("unable to fetch");
     }
   }
 
   Future<void> addComment(Comment comment) async {
-    print(comment.text);
+    print(comment.toJson());
     final response = await http.post(
       Uri.parse('$url/comments/${comment.recipeId}'),
       headers: {
@@ -33,25 +33,29 @@ class CommentService {
     );
 
     if (response.statusCode != 201) {
-      throw Exception('Failed to add comment');
+      SnackBar(content: Text("Unable to post comment, pls try again later"));
     } else {
       print('success');
+      SnackBar(content: Text("Comment successfully created"));
     }
   }
 
-  Future<void> deleteComment(String commentId) async {
+  Future<bool> deleteComment(String commentId) async {
     final response = await http.delete(
       Uri.parse('$url/comments/$commentId'),
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete comment');
+      return false;
+    } else {
+      return true;
     }
   }
 
-  Future<void> updateComment(Comment comment) async {
-    final response = await http.put(
-      Uri.parse('$url/comments/${comment.id}'),
+  Future<bool> updateComment(Comment comment) async {
+    String? commentId = comment.id;
+    final response = await http.patch(
+      Uri.parse('$url/comments/${commentId}'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -59,7 +63,9 @@ class CommentService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to update comment');
+      return false;
+    } else {
+      return true;
     }
   }
 }

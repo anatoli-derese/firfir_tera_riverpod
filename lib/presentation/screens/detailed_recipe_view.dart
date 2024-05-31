@@ -1,4 +1,5 @@
 import 'package:firfir_tera/models/Recipe.dart';
+import 'package:firfir_tera/providers/home_provider.dart';
 import 'package:firfir_tera/providers/recipe_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,12 +24,18 @@ class DetailedView extends ConsumerWidget {
           Center(child: Text('Error: $error'));
         });
     final service = ref.read(recipeServiceProvider);
-    // final String role = user!.role;
 
-    void deleteRecipe() {
-      bool ans = service.DeleteRecipe((user!.id).toString()) as bool;
-      if (ans == true) {
-        context.go("/home/discover");
+    void deleteRecipe() async {
+      bool isDeleted = await service.DeleteRecipe((recipe.id).toString());
+      if (isDeleted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Successfully deleted the recipe")));
+        refreshNotifier.refresh();
+        ref.read(selectedIndexProvider.notifier).state = 0;
+        context.go("/home");
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Unable to delete recipe, something went wrong")));
       }
     }
 
@@ -61,7 +68,8 @@ class DetailedView extends ConsumerWidget {
                           ),
                           Row(
                             children: [
-                              if (user!.role == 'cook' || user!.role=='admin') ...[
+                              if (user!.role == 'cook' ||
+                                  user!.role == 'admin') ...[
                                 IconButton(
                                   onPressed: () {
                                     context.go(
@@ -74,13 +82,12 @@ class DetailedView extends ConsumerWidget {
                                   onPressed: deleteRecipe,
                                   icon: const Icon(Icons.delete),
                                 ),
-                              ]
-                              else ...[
+                              ] else ...[
                                 IconButton(
                                   onPressed: () => context.go(
                                       '/home/detailed_view/comment',
                                       extra: recipe),
-                                  icon:const Icon(Icons.comment),
+                                  icon: const Icon(Icons.comment),
                                 ),
                               ]
                             ],
@@ -92,7 +99,7 @@ class DetailedView extends ConsumerWidget {
                         height: 260,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(recipe.image),
+                            image: NetworkImage(recipe.image),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(30),

@@ -5,7 +5,7 @@ class User {
   String? lastName;
   final String email;
   final String role;
-  final String? image;
+  final String image;
   String? createdAt;
   String? updatedAt;
   String? version;
@@ -13,11 +13,11 @@ class User {
   User(
       {
       required this.id,
-       required this.firstName,
-       this.lastName,
+      required this.firstName,
+      this.lastName,
       required this.email,
       required this.role, 
-      this.image,
+      required this.image,
       this.createdAt,
       this.updatedAt,
       this.version
@@ -37,6 +37,19 @@ class User {
         version: json['__v'].toString()
         );
   }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstName':firstName,
+      'lastName':lastName,
+      'image':image,
+      'role':role,
+      'email':email
+    };
+  }
+
 }
 
 

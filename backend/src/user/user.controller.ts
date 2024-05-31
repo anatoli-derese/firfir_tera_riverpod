@@ -46,7 +46,7 @@ export class UserController {
   ) {
     // this.uploadService.uploadFile(file);
 
-    const serverBaseURL = 'http://10.0.2.2:3000/uploads/';
+    const serverBaseURL = 'https://2076-213-55-95-177.ngrok-free.app/uploads/';
     // const filePath = `${serverBaseURL}${file.filename}`;
     try {
       this.userService.updateById(userId, firstName, lastName, email);
@@ -63,15 +63,15 @@ export class UserController {
 
   // this route only works for admin
   @Get()
-  @Roles(Role.EDIT, Role.CREATE, Role.DELETE)
+  @Roles(Role.EDIT, Role.CREATE, Role.DELETE, Role.ADMIN)
   async getAll(): Promise<User[]> {
     
     return this.userService.getAllUsers();
   }
 
-  @Patch('/changeRole:id')
-  @Roles(Role.EDIT, Role.CREATE, Role.DELETE)
-  async updateRole(@Body('userId') userId: string, @Body('role') role: string) {
+  @Patch('changeRole/:id')
+  @Roles(Role.ADMIN)
+  async updateRole(@Param('id') userId: string, @Body('role') role: string) {
     try {
       this.userService.changeRole(userId, role);
     } catch {
