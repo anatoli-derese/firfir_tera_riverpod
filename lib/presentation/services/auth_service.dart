@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +13,7 @@ class AuthService  {
   Future<void> initializeSharedPreferences() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
-  AuthService();
+  
 
   Future<void> login(String email, String password, BuildContext context) async {
     await initializeSharedPreferences();
@@ -56,6 +58,7 @@ class AuthService  {
         context.go('/home');
     }
     else{
+    // ignore: duplicate_ignore
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(response.statusCode.toString())),
@@ -135,6 +138,24 @@ Future patchUser (json, context) async {
 
   
   }
+}
+
+
+Future<void> changeRole() async {
+  await initializeSharedPreferences();
+  print("changing role"); 
+  final response = await http.patch(
+    Uri.parse('$baseUrl/user/changeRole'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPreferences.getString('token')}',
+    },
+    body: jsonEncode({
+      'role': 'admin',
+      'userId': sharedPreferences.getString('userId'),
+    }),
+  );
+  print(response.body);
 }
 
 
